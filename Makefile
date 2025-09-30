@@ -1,3 +1,5 @@
+include .env
+
 up:
 	docker compose up -d
 
