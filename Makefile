@@ -22,5 +22,7 @@ shell:
 down:
 	docker compose down
 
+ps:
+	docker compose ps
 # seed:
 # 	docker compose exec web sh -c 'python manage.py seed'
