@@ -1,2 +1,4 @@
 django 
 psycopg[binary]
+celery>=5.3
+redis>=5.0
