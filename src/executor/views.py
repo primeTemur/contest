@@ -10,7 +10,7 @@ def run_code(request):
         lang = request.POST.get("lang")
         code = request.POST.get("code")
 
-        # shared papkaga vaqtincha fayl yaratamiz
+
         shared_dir = "/shared"
         os.makedirs(shared_dir, exist_ok=True)
 
@@ -19,9 +19,8 @@ def run_code(request):
 
         with tempfile.NamedTemporaryFile(delete=False, suffix=suffix, dir=shared_dir) as f:
             f.write(code.encode())
-            filename = f.name  # masalan /shared/tmpabcd.py
+            filename = f.name  
 
-        # docker ichida ham shu fayl mavjud bo‘ladi
         commands = {
             "python": ["docker", "exec", "docker_python", "python3", filename],
             "cpp": ["docker", "exec", "docker_cpp", "bash", "-c", f"g++ {filename} -o /shared/a.out && /shared/a.out"],
