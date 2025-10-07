@@ -6,6 +6,8 @@ services:
       - 8000:8000
     volumes:
       - ./src:/app
+      - /var/run/docker.sock:/var/run/docker.sock 
+      - shared_code:/shared
     depends_on:
       db:
         condition: service_healthy
@@ -20,7 +22,7 @@ services:
     image: postgres:17
     container_name: postgres_db
     volumes: 
-      - postgres_db:/var/lib/postgres/data/
+      - postgres_db:/var/lib/postgresql/data/ 
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
@@ -44,6 +46,7 @@ services:
     command: celery -A app worker -l info
     volumes:
       - ./src:/app
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - redis
       - db
@@ -51,6 +54,30 @@ services:
       - .env
     restart: always
 
+  docker_python:
+    build:
+      context: ./src/executor
+      dockerfile: Dockerfile.python
+    container_name: docker_python
+    volumes:
+      - shared_code:/shared
+
+  docker_cpp:
+    build:
+      context: ./src/executor
+      dockerfile: Dockerfile.cpp
+    container_name: docker_cpp
+    volumes:
+      - shared_code:/shared
+
+  docker_js:
+    build:
+      context: ./src/executor
+      dockerfile: Dockerfile.js
+    container_name: docker_js
+    volumes:
+      - shared_code:/shared
 
 volumes: 
     postgres_db: 
+    shared_code:
