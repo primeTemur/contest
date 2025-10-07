@@ -27,7 +27,7 @@ def run_code(request):
             "js": ["docker", "exec", "docker_js", "node", filename],
         }
 
-        result = subprocess.run(commands[lang], capture_output=True, text=True, timeout=3)
+        result = subprocess.run(commands[lang], capture_output=True, text=True, timeout=1)
         stdout_clean = result.stdout.strip()
         return JsonResponse({"stdout": stdout_clean, "stderr": result.stderr})
     except subprocess.TimeoutExpired:
