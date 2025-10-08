@@ -8,35 +8,50 @@ from django.views.decorators.csrf import csrf_exempt
 def run_code(request):
     try:
         lang = request.POST.get("lang")
-        code = request.POST.get("code")
+        code = request.POST.get("code", "")
+        # value = request.POST.get('var',"")
+        value = "1\n2\n"
 
 
         shared_dir = "/shared"
         os.makedirs(shared_dir, exist_ok=True)
 
         suffix_map = {"python": ".py", "cpp": ".cpp", "js": ".js"}
-        suffix = suffix_map[lang]
+        suffix = suffix_map.get(lang)
+        if not suffix:
+            return JsonResponse({"error": "Unsupported language"}, status=400)
 
         with tempfile.NamedTemporaryFile(delete=False, suffix=suffix, dir=shared_dir) as f:
             f.write(code.encode())
-            filename = f.name  
+            filename = f.name
 
         commands = {
-            "python": ["docker", "exec", "docker_python", "python3", filename],
-            "cpp": ["docker", "exec", "docker_cpp", "bash", "-c", f"g++ {filename} -o /shared/a.out && /shared/a.out"],
-            "js": ["docker", "exec", "docker_js", "node", filename],
+            "python": ["docker", "exec","-i", "docker_python", "python3", filename],
+            "cpp": ["docker", "exec","-i", "docker_cpp", "bash", "-c", f"g++ {filename} -o /shared/a.out && /shared/a.out"],
+            "js": ["docker", "exec","-i", "docker_js", "node", filename],
         }
 
-        result = subprocess.run(commands[lang], capture_output=True, text=True, timeout=1)
-        stdout_clean = result.stdout.strip()
-        return JsonResponse({"stdout": stdout_clean, "stderr": result.stderr})
-    except subprocess.TimeoutExpired:
+        process = subprocess.Popen(
+            commands[lang],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+
+        try:
+            stdout, stderr = process.communicate(input=value + "\n", timeout=2)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            stdout, stderr = "", "Time limit exceeded"
+
+        stdout_clean = stdout.strip()
+        stderr_clean = stderr.strip()
+
         return JsonResponse({
-            "error": "timeout",
-            "stderr": "Execution took too long (possibly infinite loop)"
-        }, status=408)
+            "stdout": stdout_clean,
+            "stderr": stderr_clean
+        })
 
     except Exception as e:
-        return JsonResponse({
-            "error": str(e)
-        }, status=500)
+        return JsonResponse({"error": str(e)}, status=500)
