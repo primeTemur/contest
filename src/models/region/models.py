@@ -1,0 +1,6 @@
+from django.db import models
+
+class Region:
+    name = models.TextField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    
