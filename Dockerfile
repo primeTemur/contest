@@ -5,7 +5,7 @@ PYTONUNBUFFERED=1
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y docker.io curl
+RUN apt-get update && apt-get install -y docker.io curl && pip install djangorestframework
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 

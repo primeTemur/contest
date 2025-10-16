@@ -1,5 +1,6 @@
 from django.db import models
-from region.models import Region
+from models.region.models import Region
+
 
 class User(models.Model):
     class Meta:

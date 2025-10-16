@@ -42,10 +42,10 @@ INSTALLED_APPS = [
 
     'rest_framework',
 
-    'models.core',
-    'models.executor',
+    # 'models.core',
+    'models.region',
     'models.users',
-    'models.region'
+    # 'models.executor',
 ]
 
 MIDDLEWARE = [

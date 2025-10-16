@@ -56,7 +56,7 @@ services:
 
   docker_python:
     build:
-      context: ./src/executor
+      context: ./src/models/executor
       dockerfile: Dockerfile.python
     container_name: docker_python
     volumes:
@@ -64,7 +64,7 @@ services:
 
   docker_cpp:
     build:
-      context: ./src/executor
+      context: ./src/models/executor
       dockerfile: Dockerfile.cpp
     container_name: docker_cpp
     volumes:
@@ -72,7 +72,7 @@ services:
 
   docker_js:
     build:
-      context: ./src/executor
+      context: ./src/models/executor
       dockerfile: Dockerfile.js
     container_name: docker_js
     volumes:
