@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-e@(^bu6s%wutryu5^9b&8bbem8g1td8@(sa@^=s!(3jv$%#c+x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -47,9 +47,9 @@ INSTALLED_APPS = [
     'models.users',
     # 'models.executor',
 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
 ]
 
 MIDDLEWARE = [
@@ -61,7 +61,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    "allauth.account.middleware.AccountMiddleware",
+    # "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -87,6 +87,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
+    # ,
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.TokenAuthentication',  # yoki JWT
+    # ]
 }
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -127,7 +131,12 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# HEADLESS_FRONTEND_URLS = {
+#     "password_reset": "http://localhost:3000/reset-password/{key}",
+#     "email_confirmation": "http://localhost:3000/confirm-email/{key}",
+# }
 
+# HEADLESS_ONLY = True
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
